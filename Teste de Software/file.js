@@ -223,3 +223,151 @@ testar("ContaBancaria: depositar aumenta o saldo", () => {
 })
 
 imprimirResultados("Exercício 3 — ContaBancaria");
+
+
+// EXERCICIO 4 -- Pilha (TDD)
+// Nivel 2 -- Intermediário
+
+// Ciclo TDD completo:
+//  Red -> escrever os testes antes da implementação
+//  Green -> implementar o mínimo para passar
+//  Refactor -> (feito na implementação abaixo)
+
+// FASE RED: os testes abaixo seriam escritos antes da classe existir.
+
+// FASE GREEN: implementação mínima para fazer os testes passarem
+
+class Pilha {
+    constructor() {
+        this.itens = []
+    }
+
+    empilhar(item) {
+        this.itens.push(item)
+    }
+
+    desempilhar() {
+        if (this.itens.length === 0) throw new Error("A pilha está vazia.")
+        return this.itens.pop()
+    }
+
+    estaVazia() {
+        return this.itens.length === 0
+    }
+}
+
+
+// ---- TESTES: PILHA -----
+testar("Pilha: nova pilha começa vazia", ()=> {
+    const pilha = new Pilha()
+    assertEqual(pilha.estaVazia(), true)
+})
+
+testar("Pilha: após empilhar, não está mais vazia", () => {
+    const pilha = new Pilha();
+    pilha.empilhar("A")
+    assertEqual(pilha.estaVazia(), false)
+})
+
+testar("Pilha: desempilhar retorna o último item inserido", () => {
+    const pilha = new Pilha()
+    pilha.empilhar("A")
+    pilha.empilhar("B")
+    assertAlmostEqual(pilha.desempilhar(), "B")
+})
+
+testar("Pilha: desempilhar na ordem inversa da inserção (LIFO", () => {
+    const pilha = new Pilha()
+    pilha.empilhar(1)
+    pilha.empilhar(2)
+    pilha.empilhar(3)
+    assertEqual(pilha.desempilhar(), 3)
+    assertEqual(pilha.desempilhar(), 2)
+    assertEqual(pilha.desempilhar(), 1)
+})
+
+testar("Pilha: após desempilhar todos os itens, fica vazia", () => {
+    const pilha = new Pilha()
+    pilha.empilhar(1)
+    pilha.desempilhar()
+    assertEqual(pilha.estaVazia(), true)
+})
+
+testar("Pilha: desempilhar pilha vazia lança exceção", () => {
+    const pilha = new Pilha()
+    assertLancaErro(() => pilha.desempilhar(), "A pilha esta vazia.")
+})
+
+
+imprimirResultados("Exercício 4 - Pilha (TDD)")
+
+
+// EXERCICIO 5 -- Validador de CPF (TDD - Desafio)
+// Nivel 3 - Desafio
+
+// Regras do enunciado
+//   - CPF válido tem exatamente 11 dígitos numéricos.
+//   - CPFs com letras são inválidos.
+//   - CPFs com formatação "111.111.111-11" são inválidos
+//     (pois contêm caracteres não numéricos).
+
+// FASE RED: testes escritos antes da implementação.
+
+// FASE GREEN: implementação.
+
+class Validador {
+    validarCpf(cpf) {
+        if (typeof cpf !== "string") return false;
+        return /^\d{11}$/.test(cpf);
+    }
+}
+
+// --- Testes: Validador
+
+testar("Validador: CPF com 11 dígitos numéricos é válido", () => {
+    const v = new Validador()
+    assertEqual(v.validarCpf("12345678901"), true)
+})
+
+testar("Validador: outro CPF com 11 dígitos numérico é válido", () => {
+    const v = new Validador()
+    assertEqual(v.validarCpf("00000000000"), true)
+})
+
+testar("Validador: CPF com menos de 11 dígitos é inválido", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf("1234567890"), false);   // 10 dígitos
+});
+ 
+testar("Validador: CPF com mais de 11 dígitos é inválido", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf("123456789012"), false);  // 12 dígitos
+});
+ 
+testar("Validador: CPF com letras é inválido", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf("1234567890A"), false);
+});
+ 
+testar("Validador: CPF com pontuação (111.111.111-11) é inválido", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf("111.111.111-11"), false);
+});
+ 
+testar("Validador: CPF com espaços é inválido", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf("123 456 789 01"), false);
+});
+ 
+testar("Validador: string vazia é inválida", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf(""), false);
+});
+ 
+testar("Validador: número em vez de string é inválido", () => {
+    const v = new Validador();
+    assertEqual(v.validarCpf(12345678901), false);
+});
+
+
+imprimirResultados("EXERCICIO 5 -- Validador de CPF (TDD)")
