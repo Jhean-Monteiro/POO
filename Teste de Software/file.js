@@ -1,6 +1,3 @@
-
-
-
 // TESTE DA AULA
 
 const resultados = []
