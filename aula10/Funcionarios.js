@@ -159,3 +159,43 @@ const dev = new Desenvolvedor("Jhean", 2222222, 1000)
 dev.adicionarLinguagem("Python")
 dev.adicionarLinguagem("Java")
 console.log(dev.calcularSalario())
+
+
+// -------------------
+// SUBCLASSE: Gerente
+// -------------------
+
+class Gerente extends Funcionario {
+    static BONUS_LIDERANCA = 0.25
+
+    // Calcula: salario base x 1.25
+    // Exemplo: salario 8000 -> 8000 x 1.25 = 10000
+    calcularSalario() {
+        return this._salarioBase * (1 + Gerente.BONUS_LIDERANCA)
+    }
+
+    descricao() {
+        return "Gerente"
+    }
+}
+
+// -----------------------
+// SUBCLASSE: Estagiario
+// -----------------------
+
+// apenas com 60% do salário
+
+class Estagiario extends Funcionario {
+    static PERCENTUAL_SALARIO = 0.60 // 60%
+
+    calcularSalario() {
+        return this._salarioBase * Estagiario.PERCENTUAL_SALARIO
+    }
+
+    descricao() {
+        return "Estagiário"
+    }
+}
+
+
+module.exports = { Funcionario, Analista, Desenvolvedor, Gerente, Estagiario };
