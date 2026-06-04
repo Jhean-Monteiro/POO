@@ -35,7 +35,7 @@ class Empresa {
 
     // retorna o total de funcionários somando todos os departamentos
     get tamanho() {
-        return Object.values(this._departamenos).reduce((total, dep) => total + dep.tamanho, 0)
+        return Object.values(this._departamentos).reduce((total, dep) => total + dep.tamanho, 0)
     }
 
     // ----------------------------------
@@ -104,7 +104,7 @@ class Empresa {
 
     demitir(nomeDep, matricula) {
         try {
-            this._departamenos[nomeDep].demitir(matricula)
+            this._departamentos[nomeDep].demitir(matricula)
             console.log(`  [OK] Matrícula '${matricula}' demitida de '${nomeDep}'.`);
         } catch (erro) {
             if (erro instanceof FuncionarioNaoEncontradoError) {
@@ -119,7 +119,7 @@ class Empresa {
     // Folha total: soma as folhas de todos os departamentos
     // ----------------------------------------------------------
     folhaTotal() {
-        return Object.values(this._departamenos).reduce((total, dep) => total + dep.folhaDePagamento(), 0)
+        return Object.values(this._departamentos).reduce((total, dep) => total + dep.folhaDePagamento(), 0)
     }
 
     // ----------------------------------------------------------------
@@ -129,7 +129,7 @@ class Empresa {
     relatorio() {
         console.log(`\n========== RELATÓRIO — ${this._razaoSocial} ==========`);
 
-        for (const dep of Object.values(this._razaoSocial)) {
+        for (const dep of Object.values(this._departamentos)) {
             console.log(`\n  ${dep}`)
             for (const f of dep.listar()) {
                 console.log(`  ${f}`)
@@ -187,7 +187,30 @@ class Empresa {
     // ----------------------------------------------------------
 
     _localizar(matricula) {
+        for (const dep of Object.values(this._departamentos)) {
+            try {
+                return dep.buscar(matricula)
+            } catch (erro) {
+                // FuncionarioNaoEncontradoError aqui apenas significa "não está neste departamento",
+                // então continuamos procurando nos próximos. Qualquer outro erro é relançado.
+
+                if(!(erro instanceof FuncionarioNaoEncontradoError)) {
+                    throw erro;
+                }
+            }
+        }
+        throw new FuncionarioNaoEncontradoError(
+            `Nenhum funcionário com matrícula '${matricula}' encontrado na empresa.`
+
+        )
+    }
+
+    toString() {
+        const ndeps = Object.keys(this._departamentos).length
+        return `${this._razaoSocial} (${ndeps} departamento(s), ${this.tamanho} funcionário(s))`;
 
     }
 
 }
+
+module.exports = { Empresa };

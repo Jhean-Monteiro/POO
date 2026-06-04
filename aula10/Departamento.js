@@ -99,6 +99,10 @@ class Departamento {
         })
     }
 
+    listar() {
+        return [...this._funcionarios];
+    }
+
     toString() {
         return `Departamento: ${this._nome} (${this.tamanho} funcionário(s))`;
     }

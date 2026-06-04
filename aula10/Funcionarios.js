@@ -102,9 +102,6 @@ class Analista extends Funcionario {
     }
 }
 
-const analista = new Analista()
-let teste = analista.descricao()
-console.log(teste)
 
 
 // ---------------------------
@@ -155,10 +152,6 @@ class Desenvolvedor extends Funcionario {
     }
 }
 
-const dev = new Desenvolvedor("Jhean", 2222222, 1000)
-dev.adicionarLinguagem("Python")
-dev.adicionarLinguagem("Java")
-console.log(dev.calcularSalario())
 
 
 // -------------------
