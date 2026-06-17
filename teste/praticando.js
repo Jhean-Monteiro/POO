@@ -148,3 +148,78 @@ try {
 } catch (e) {
     console.log(`erro esperado: ${e.name}: `, e.message)
 }
+
+class Guilda {
+    #nome
+    #membros
+
+    constructor(nome) {
+        this.#nome = nome
+        this.#membros = []
+    }
+
+    get membros() {return this.#membros}
+
+    adicionarMembro(p) {
+        // Validação de instância para agregação
+        if(!(p instanceof Personagem)) {
+            throw new ErroTipoInvalido("Apenas objetos do tipo Personagem podem ser adicionados à Guilda")
+        }
+        this.#membros.push(p)
+    }
+
+    removerMembro(p) {
+        const index = this.#membros.indexOf(p)
+
+        if (index === -1) { // membro não está na guilda
+            throw new ErroMembroNaoEncontrado(`${p.nome} não pertence a esta guilda`)
+        }
+
+        this.#membros.splice(index, 1)
+
+    }
+
+    listarMembros() {
+        if (this.#membros.length === 0) return "A Guilda está vazia"
+
+        return this.#membros.map(m => m.toString()).join('\n')
+    }
+
+    buscarMembrosPorNome(trecho) {
+        // busca parcial por trecho do nome
+
+        return this.#membros.filter(m => m.nome.toLowerCase().includes(trecho.toLowerCase()))
+    }
+
+    listarHabilidadesDeMembro(nomeCompleto) {
+        const membro = this.#membros.find(m => m.nome === nomeCompleto)
+        if(!membro) {
+            throw new ErroMembroNaoEncontrado(`Membro ${nomeCompleto} não encontrado`)
+        }
+        return membro.listarHabilidades()
+    }
+}
+
+console.log("============ TESTE DE ERROS ==========")
+
+try {
+    const pInvalido = new Personagem("teste", 123)
+} catch (e) {
+    console.log(`Erro capturado: [${e.name}] ${e.message}`)
+}
+
+try {
+    const guildaErro = new Guilda("guilda de teste kkk")
+    guildaErro.adicionarMembro("Não sou um personagem")
+} catch (e) {
+    console.log(`Erro capturado: [${e.name}] ${e.message}`)
+}
+
+try {
+    const guildaErro = new Guilda("Guilda testee")
+    const magoTeste = new Mago("Boboca")
+    guildaErro.removerMembro(magoTeste)
+} catch (error) {
+    console.log(`Erro Capturado: [${error.name}] ${error.message}`);
+
+}
